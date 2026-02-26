@@ -1,0 +1,28 @@
+CREATE DATABASE user_management_db;
+USE user_management_db;
+
+CREATE TABLE users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    full_name VARCHAR(100) NOT NULL,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    address VARCHAR(255),
+    age INT,
+    dob DATE,
+    contact_number VARCHAR(20),
+    profile_image VARCHAR(255),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+INSERT INTO users 
+(full_name, email, password, address, age, dob, contact_number)
+VALUES 
+('System Administrator',
+ 'admin@gmail.com',
+ '$2y$10$8k0K8M3nJrQ7mW5sLZzH3u2rK1o0kJZ5YlE6g9Kz8JHkLmNoPqRsT',
+ 'Main Office',
+ 30,
+ '1995-01-01',
+ '09123456789');
+
+ //pass: admin123

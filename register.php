@@ -14,23 +14,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $contact = trim($_POST['contact_number']);
 
     // ===== VALIDATION =====
-    if (empty($full_name) || empty($email) || empty($password) || 
-        empty($address) || empty($age) || empty($dob) || empty($contact)) {
+    if (
+        empty($full_name) || empty($email) || empty($password) ||
+        empty($address) || empty($age) || empty($dob) || empty($contact)
+    ) {
 
         $error = "All fields are required.";
-
     } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
 
         $error = "Invalid email format.";
-
     } elseif (!is_numeric($age)) {
 
         $error = "Age must be numeric.";
-
     } elseif ($password !== $confirm_password) {
 
         $error = "Passwords do not match.";
-
     } else {
 
         // ===== CHECK EMAIL =====
@@ -40,7 +38,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if ($check->rowCount() > 0) {
 
             $error = "Email already registered.";
-
         } else {
 
             // ===== HANDLE IMAGE UPLOAD =====
@@ -95,98 +92,182 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 ?>
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
-<title>Register</title>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Account</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            background: linear-gradient(135deg, #00c6ff, #0072ff);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+        }
+
+        .card {
+            border: none;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.95);
+        }
+
+        .form-control {
+            border-radius: 10px;
+            padding-left: 40px;
+        }
+
+        .input-group-text {
+            border-radius: 10px 0 0 10px;
+        }
+
+        .btn-success {
+            border-radius: 30px;
+            padding: 10px;
+            font-weight: 600;
+            transition: 0.3s ease;
+        }
+
+        .btn-success:hover {
+            transform: scale(1.03);
+        }
+
+        .profile-preview {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            display: none;
+            margin: 10px auto;
+            border: 3px solid #0072ff;
+        }
+    </style>
 </head>
-<body class="bg-light">
 
-<div class="container py-5">
-<div class="row justify-content-center">
-<div class="col-md-6">
+<body>
 
-<div class="card shadow">
-<div class="card-header bg-success text-white text-center">
-<h4>Create Account</h4>
-</div>
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
 
-<div class="card-body">
+                <div class="card shadow-lg p-4">
+                    <div class="text-center mb-4">
+                        <h3 class="fw-bold text-primary">Create Account</h3>
+                        <p class="text-muted">Join us today! It only takes a minute.</p>
+                    </div>
 
-<?php if(isset($error)): ?>
-<div class="alert alert-danger"><?= $error ?></div>
-<?php endif; ?>
+                    <?php if (isset($error)): ?>
+                        <div class="alert alert-danger alert-dismissible fade show">
+                            <?= $error ?>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    <?php endif; ?>
 
-<?php if(isset($success)): ?>
-<div class="alert alert-success">
-<?= $success ?>
-<br>
-<a href="login.php" class="btn btn-primary btn-sm mt-2">Go to Login</a>
-</div>
-<?php endif; ?>
+                    <?php if (isset($success)): ?>
+                        <div class="alert alert-success text-center">
+                            <?= $success ?>
+                            <br>
+                            <a href="login.php" class="btn btn-primary btn-sm mt-2">Go to Login</a>
+                        </div>
+                    <?php endif; ?>
 
-<form method="POST" enctype="multipart/form-data">
+                    <form method="POST" enctype="multipart/form-data">
 
-<div class="mb-3">
-<label>Full Name</label>
-<input type="text" name="full_name" class="form-control" required>
-</div>
+                        <div class="row">
 
-<div class="mb-3">
-<label>Email</label>
-<input type="email" name="email" class="form-control" required>
-</div>
+                            <div class="col-md-6 mb-3">
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fa fa-user"></i></span>
+                                    <input type="text" name="full_name" class="form-control" placeholder="Full Name" required>
+                                </div>
+                            </div>
 
-<div class="mb-3">
-<label>Password</label>
-<input type="password" name="password" class="form-control" required>
-</div>
+                            <div class="col-md-6 mb-3">
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fa fa-envelope"></i></span>
+                                    <input type="email" name="email" class="form-control" placeholder="Email Address" required>
+                                </div>
+                            </div>
 
-<div class="mb-3">
-<label>Confirm Password</label>
-<input type="password" name="confirm_password" class="form-control" required>
-</div>
+                            <div class="col-md-6 mb-3">
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fa fa-lock"></i></span>
+                                    <input type="password" name="password" class="form-control" placeholder="Password" required>
+                                </div>
+                            </div>
 
-<div class="mb-3">
-<label>Address</label>
-<input type="text" name="address" class="form-control" required>
-</div>
+                            <div class="col-md-6 mb-3">
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fa fa-lock"></i></span>
+                                    <input type="password" name="confirm_password" class="form-control" placeholder="Confirm Password" required>
+                                </div>
+                            </div>
 
-<div class="mb-3">
-<label>Age</label>
-<input type="number" name="age" class="form-control" required>
-</div>
+                            <div class="col-md-6 mb-3">
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fa fa-map-marker-alt"></i></span>
+                                    <input type="text" name="address" class="form-control" placeholder="Address" required>
+                                </div>
+                            </div>
 
-<div class="mb-3">
-<label>Date of Birth</label>
-<input type="date" name="dob" class="form-control" required>
-</div>
+                            <div class="col-md-3 mb-3">
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+                                    <input type="number" name="age" class="form-control" placeholder="Age" required>
+                                </div>
+                            </div>
 
-<div class="mb-3">
-<label>Contact Number</label>
-<input type="text" name="contact_number" class="form-control" required>
-</div>
+                            <div class="col-md-3 mb-3">
+                                <input type="date" name="dob" class="form-control" required>
+                            </div>
 
-<div class="mb-3">
-<label>Profile Image</label>
-<input type="file" name="profile_image" class="form-control" accept="image/*" required>
-</div>
+                            <div class="col-md-6 mb-3">
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fa fa-phone"></i></span>
+                                    <input type="text" name="contact_number" class="form-control" placeholder="Contact Number" required>
+                                </div>
+                            </div>
 
-<button class="btn btn-success w-100">Register</button>
+                            <div class="col-md-6 mb-3 text-center">
+                                <label class="form-label fw-semibold">Profile Image</label>
+                                <input type="file" name="profile_image" class="form-control" accept="image/*" onchange="previewImage(event)" required>
+                                <img id="preview" class="profile-preview">
+                            </div>
 
-<div class="text-center mt-3">
-Already have an account?
-<a href="login.php">Login here</a>
-</div>
+                        </div>
 
-</form>
+                        <button class="btn btn-success w-100 mt-3">Register</button>
 
-</div>
-</div>
+                        <div class="text-center mt-4">
+                            Already have an account?
+                            <a href="login.php" class="fw-semibold text-decoration-none">Login here</a>
+                        </div>
 
-</div>
-</div>
-</div>
+                    </form>
 
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function previewImage(event) {
+            const reader = new FileReader();
+            reader.onload = function() {
+                const output = document.getElementById('preview');
+                output.src = reader.result;
+                output.style.display = "block";
+            };
+            reader.readAsDataURL(event.target.files[0]);
+        }
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>
